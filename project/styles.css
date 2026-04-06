@@ -1,0 +1,21 @@
+/* RESET */
+*,*::before,*::after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+/* VARIABLES */
+:root{
+  --ink:#1a1a18;
+  --accent:#b85c38;
+  --parchment:#f7f4ee;
+  --serif:'Playfair Display', Georgia, serif;
+  --sans:'DM Sans', system-ui, sans-serif;
+}
+
+/* BODY */
+body{
+  font-family:var(--sans);
+  background:var(--parchment);
+}
