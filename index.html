@@ -1,26 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maren Sollis — Writer & Creative Thinker</title>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=DM+Sans&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maren Sollis — Writer & Creative Thinker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#1a1a18;--ink-muted:#5c5c56;--ink-faint:#9c9c94;--parchment:#f7f4ee;--parchment-mid:#ede9e0;--accent:#b85c38;--accent-light:#f0ddd4;--accent-dark:#7a3a22;--white:#ffffff;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--nav-h:68px}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--sans);background:var(--parchment);color:var(--ink);line-height:1.7;overflow-x:hidden}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(247,244,238,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--parchment-mid);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,4rem);z-index:1000;transition:box-shadow .3s}
+nav.scrolled{box-shadow:0 2px 24px rgba(26,26,24,.07)}
+.nav-logo{font-family:var(--serif);font-size:1.25rem;color:var(--ink);text-decoration:none;letter-spacing:-.01em;cursor:pointer}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:.875rem;font-weight:500;color:var(--ink-muted);text-decoration:none;letter-spacing:.04em;text-transform:uppercase;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{background:var(--ink);color:var(--parchment)!important;padding:.45rem 1.1rem;border-radius:100px;transition:background .2s!important}
+.nav-cta:hover{background:var(--accent)!important;color:var(--white)!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{width:22px;height:1.5px;background:var(--ink);transition:transform .3s,opacity .3s;display:block}
+.hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:var(--nav-h);left:0;right:0;background:var(--parchment);border-bottom:1px solid var(--parchment-mid);padding:1.5rem clamp(1.5rem,5vw,4rem);display:none;flex-direction:column;gap:1.25rem;z-index:999}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:1.05rem;font-weight:500;color:var(--ink);text-decoration:none;cursor:pointer}
+/* PAGES */
+.page{display:none}.page.active{display:block}
+/* LAYOUT */
+section{padding:clamp(4rem,8vw,7rem) clamp(1.5rem,5vw,4rem)}
+.container{max-width:1100px;margin:0 auto}
+.container-narrow{max-width:740px;margin:0 auto}
+/* BUTTONS */
+.btn{display:inline-block;text-decoration:none;padding:.75rem 1.75rem;border-radius:100px;font-size:.9rem;font-weight:500;letter-spacing:.02em;transition:all .25s;cursor:pointer;border:none;font-family:var(--sans)}
+.btn-primary{background:var(--ink);color:var(--parchment)}
+.btn-primary:hover{background:var(--accent);color:var(--white);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent-light)}
+.btn-ghost:hover{background:var(--accent-light);transform:translateY(-1px)}
+/* LABELS */
+.section-label{font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;display:block}
+.section-title{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:1rem}
+.section-lead{font-size:1.05rem;color:var(--ink-muted);font-weight:300;max-width:560px;line-height:1.8}
+/* READING BAR */
+.reading-bar{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:1100;width:0%;transition:width .1s linear}
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding-top:calc(var(--nav-h) + 4rem);background:var(--parchment);position:relative;overflow:hidden}
+.hero-bg-text{position:absolute;right:-2rem;top:50%;transform:translateY(-50%);font-family:var(--serif);font-size:clamp(8rem,18vw,16rem);color:var(--parchment-mid);line-height:1;user-select:none;pointer-events:none;letter-spacing:-.04em}
+.hero-content{position:relative;z-index:1}
+.hero-tag{display:inline-block;font-size:.8rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent-light);background:var(--accent-light);padding:.35rem .9rem;border-radius:100px;margin-bottom:1.5rem}
+.hero-title{font-family:var(--serif);font-size:clamp(3rem,7vw,5.5rem);line-height:1.1;letter-spacing:-.02em;color:var(--ink);margin-bottom:1.5rem}
+.hero-title em{color:var(--accent);font-style:italic}
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--ink-muted);max-width:520px;margin-bottom:2.5rem;font-weight:300;line-height:1.8}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid var(--parchment-mid);flex-wrap:wrap}
+.stat-num{font-family:var(--serif);font-size:2.2rem;font-weight:700;color:var(--ink);line-height:1}
+.stat-label{font-size:.8rem;color:var(--ink-faint);letter-spacing:.06em;text-transform:uppercase;margin-top:.3rem}
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.about-image-wrap{position:relative}
+.about-image{width:100%;aspect-ratio:4/5;border-radius:2px;background:var(--parchment-mid);overflow:hidden;position:relative}
+.about-image-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:4rem;color:var(--parchment);background:linear-gradient(135deg,#c8b89a 0%,#a89070 100%)}
+.about-image-decor{position:absolute;bottom:-1.5rem;right:-1.5rem;width:60%;height:60%;border:2px solid var(--accent-light);border-radius:2px;z-index:-1}
+.about-quote{margin:2rem 0;padding-left:1.5rem;border-left:3px solid var(--accent);font-family:var(--serif);font-size:1.15rem;font-style:italic;color:var(--ink-muted);line-height:1.7}
+.about-pills{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem}
+.pill{font-size:.8rem;font-weight:500;letter-spacing:.05em;background:var(--parchment);color:var(--ink-muted);border:1px solid var(--parchment-mid);padding:.35rem .9rem;border-radius:100px}
+/* BLOG */
+.blog-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:1rem}
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2rem}
+.post-card{background:var(--white);border-radius:4px;overflow:hidden;transition:transform .3s,box-shadow .3s;text-decoration:none;color:inherit;display:block;cursor:pointer}
+.post-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(26,26,24,.08)}
+.post-card.featured{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}
+.post-img{overflow:hidden;background:var(--parchment-mid);position:relative}
+.post-card:not(.featured) .post-img{aspect-ratio:16/10}
+.post-img-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;transition:transform .4s;min-height:200px}
+.post-card:hover .post-img-inner{transform:scale(1.05)}
+.post-body{padding:1.5rem}
+.post-card.featured .post-body{padding:2.5rem;display:flex;flex-direction:column;justify-content:center}
+.post-cat{font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;display:block}
+.post-title{font-family:var(--serif);font-size:1.3rem;line-height:1.3;margin-bottom:.75rem;color:var(--ink)}
+.post-card.featured .post-title{font-size:1.8rem}
+.post-excerpt{font-size:.9rem;color:var(--ink-muted);line-height:1.7;margin-bottom:1rem}
+.post-meta{font-size:.8rem;color:var(--ink-faint);display:flex;gap:1rem;flex-wrap:wrap}
+.read-more{display:inline-block;margin-top:1rem;font-size:.85rem;font-weight:500;color:var(--accent);letter-spacing:.04em}
+.read-more:hover{text-decoration:underline}
+/* SERVICES DARK */
+.services-grid-dark{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin-top:3rem}
+.service-card-dark{background:var(--ink);padding:2.5rem 2rem;transition:background .3s;cursor:pointer}
+.service-card-dark:hover{background:#232320}
+.service-icon{width:44px;height:44px;border-radius:2px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:1.25rem}
+.service-name-dark{font-family:var(--serif);font-size:1.2rem;color:var(--parchment);margin-bottom:.5rem}
+.service-desc-dark{font-size:.9rem;color:rgba(247,244,238,.55);line-height:1.7;margin-bottom:1.5rem}
+.service-price-dark{font-size:1.5rem;font-weight:500;color:var(--parchment);letter-spacing:-.02em}
+.service-price-dark span{font-size:.85rem;color:rgba(247,244,238,.45);font-weight:300;margin-left:.25rem}
+.service-cta-dark{display:inline-block;margin-top:1rem;font-size:.8rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;font-weight:500;cursor:pointer}
+.service-cta-dark:hover{text-decoration:underline}
+/* TESTIMONIALS */
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.testi-card{background:var(--white);padding:2rem;border-radius:4px;border-left:3px solid var(--accent)}
+.testi-text{font-family:var(--serif);font-size:1rem;font-style:italic;line-height:1.75;color:var(--ink-muted);margin-bottom:1.25rem}
+.testi-author{display:flex;align-items:center;gap:.75rem}
+.testi-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:500;color:var(--accent-dark);flex-shrink:0}
+.testi-name{font-size:.9rem;font-weight:500;color:var(--ink)}
+.testi-role{font-size:.8rem;color:var(--ink-faint)}
+.stars{color:var(--accent);font-size:.85rem;margin-bottom:1rem}
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:4rem;align-items:start}
+.contact-info{display:flex;flex-direction:column;gap:1.5rem}
+.contact-item{display:flex;gap:1rem;align-items:flex-start}
+.contact-icon{width:40px;height:40px;border-radius:2px;background:var(--parchment);border:1px solid var(--parchment-mid);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;margin-top:.1rem}
+.contact-item-label{font-size:.75rem;color:var(--ink-faint);letter-spacing:.07em;text-transform:uppercase}
+.contact-item-val{font-size:.95rem;color:var(--ink);font-weight:500}
+.contact-item-val a{color:var(--ink);text-decoration:none}
+.contact-item-val a:hover{color:var(--accent);text-decoration:underline}
+.form-group{margin-bottom:1.25rem}
+label{font-size:.8rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);display:block;margin-bottom:.5rem}
+input,textarea,select{width:100%;background:var(--parchment);border:1px solid var(--parchment-mid);border-radius:3px;padding:.75rem 1rem;font-family:var(--sans);font-size:.95rem;color:var(--ink);transition:border-color .2s,box-shadow .2s;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+textarea{min-height:140px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-submit{width:100%;margin-top:.5rem;font-size:1rem}
+/* FOOTER */
+footer{background:var(--ink);color:rgba(247,244,238,.5);padding:3rem clamp(1.5rem,5vw,4rem) 2rem}
+.footer-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.footer-logo{font-family:var(--serif);font-size:1.4rem;color:var(--parchment);margin-bottom:.75rem;display:block;cursor:pointer}
+.footer-desc{font-size:.875rem;line-height:1.7;max-width:280px}
+.footer-col-title{font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--parchment);margin-bottom:1rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.footer-links a{font-size:.875rem;color:rgba(247,244,238,.5);text-decoration:none;transition:color .2s;cursor:pointer}
+.footer-links a:hover{color:var(--accent)}
+.footer-bottom{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:1.75rem;flex-wrap:wrap;gap:1rem}
+.footer-copy{font-size:.8rem}
+.social-links{display:flex;gap:.75rem}
+.social-link{width:34px;height:34px;border-radius:2px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:.85rem;color:rgba(247,244,238,.5);text-decoration:none;transition:all .2s;cursor:pointer}
+.social-link:hover{border-color:var(--accent);color:var(--accent)}
+/* PAGE HEADER */
+.page-header{background:var(--white);padding:calc(var(--nav-h) + 3rem) clamp(1.5rem,5vw,4rem) 3rem;border-bottom:1px solid var(--parchment-mid)}
+.back-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.85rem;color:var(--ink-muted);text-decoration:none;cursor:pointer;margin-bottom:1.5rem;transition:color .2s;letter-spacing:.03em;font-weight:500}
+.back-link:hover{color:var(--accent)}
+/* FILTER */
+.filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem}
+.filter-btn{font-size:.8rem;font-weight:500;letter-spacing:.05em;background:var(--parchment);color:var(--ink-muted);border:1px solid var(--parchment-mid);padding:.35rem .9rem;border-radius:100px;cursor:pointer;transition:all .2s;font-family:var(--sans)}
+.filter-btn:hover,.filter-btn.active{background:var(--accent);color:var(--white);border-color:var(--accent)}
+.all-posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2rem;padding:3rem clamp(1.5rem,5vw,4rem);max-width:1100px;margin:0 auto}
+/* POST READER */
+.post-reader{max-width:720px;margin:0 auto;padding:calc(var(--nav-h) + 3rem) clamp(1.5rem,5vw,2rem) 4rem}
+.post-reader-cat{font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;display:block}
+.post-reader-title{font-family:var(--serif);font-size:clamp(2rem,5vw,3.2rem);line-height:1.1;letter-spacing:-.02em;margin-bottom:1rem}
+.post-reader-meta{font-size:.85rem;color:var(--ink-faint);display:flex;gap:1.5rem;flex-wrap:wrap;padding:1rem 0;border-top:1px solid var(--parchment-mid);border-bottom:1px solid var(--parchment-mid);margin:1rem 0 2rem}
+.post-reader-hero{width:100%;aspect-ratio:16/8;border-radius:4px;overflow:hidden;margin-bottom:2.5rem;display:flex;align-items:center;justify-content:center;font-size:6rem}
+.post-reader-body{font-size:1.05rem;line-height:1.9;color:var(--ink)}
+.post-reader-body p{margin-bottom:1.5rem}
+.post-reader-body h2{font-family:var(--serif);font-size:1.6rem;margin:2.5rem 0 1rem}
+.post-reader-body h3{font-family:var(--serif);font-size:1.25rem;margin:2rem 0 .75rem}
+.post-reader-body blockquote{border-left:3px solid var(--accent);padding-left:1.5rem;margin:2rem 0;font-family:var(--serif);font-style:italic;color:var(--ink-muted);font-size:1.15rem;line-height:1.7}
+.post-reader-body em{color:var(--accent);font-style:italic}
+.post-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--parchment-mid)}
+.post-nav{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--parchment-mid);flex-wrap:wrap}
+.post-nav-item{flex:1;min-width:140px}
+.post-nav-label{font-size:.75rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem}
+.post-nav-title{font-family:var(--serif);font-size:1rem;color:var(--ink);cursor:pointer}
+.post-nav-title:hover{color:var(--accent)}
+.post-nav-item.next{text-align:right}
+/* SERVICES PAGE */
+.services-page{padding:calc(var(--nav-h) + 3rem) clamp(1.5rem,5vw,4rem) 5rem}
+.services-page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2rem;margin-top:3rem}
+.service-page-card{background:var(--white);border:1px solid var(--parchment-mid);border-radius:4px;padding:2.5rem 2rem;transition:box-shadow .3s,transform .3s;cursor:pointer}
+.service-page-card:hover{box-shadow:0 16px 40px rgba(26,26,24,.08);transform:translateY(-3px)}
+.spcard-icon{width:52px;height:52px;border-radius:4px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.5rem}
+.spcard-name{font-family:var(--serif);font-size:1.4rem;margin-bottom:.5rem}
+.spcard-price{font-size:1.8rem;font-weight:500;color:var(--accent);margin:1rem 0;letter-spacing:-.02em}
+.spcard-price span{font-size:.9rem;color:var(--ink-faint);font-weight:300}
+.spcard-features{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin:1.25rem 0 1.75rem}
+.spcard-features li{font-size:.9rem;color:var(--ink-muted);padding-left:1.2rem;position:relative}
+.spcard-features li::before{content:'✦';position:absolute;left:0;color:var(--accent);font-size:.6rem;top:.35rem}
+.faq-section{max-width:720px;margin:4rem auto 0}
+.faq-item{border-bottom:1px solid var(--parchment-mid)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0;cursor:pointer;font-family:var(--serif);font-size:1.1rem;gap:1rem}
+.faq-icon{font-size:1.2rem;color:var(--accent);transition:transform .3s;flex-shrink:0}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-a{font-size:.95rem;color:var(--ink-muted);line-height:1.8;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s}
+.faq-item.open .faq-a{max-height:400px;padding-bottom:1.25rem}
+/* ABOUT PAGE */
+.about-page{padding:calc(var(--nav-h) + 3rem) clamp(1.5rem,5vw,4rem) 5rem}
+.about-page-hero{display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:center;max-width:1100px;margin:0 auto}
+.timeline{max-width:700px;margin:5rem auto 0}
+.timeline-item{display:grid;grid-template-columns:80px 1fr;gap:2rem;padding-bottom:2.5rem;position:relative}
+.timeline-item:not(:last-child)::after{content:'';position:absolute;left:35px;top:28px;bottom:0;width:1px;background:var(--parchment-mid)}
+.timeline-year{font-family:var(--serif);font-size:1rem;color:var(--accent);font-weight:700;padding-top:.15rem}
+.timeline-content h4{font-family:var(--serif);font-size:1.1rem;margin-bottom:.35rem}
+.timeline-content p{font-size:.9rem;color:var(--ink-muted);line-height:1.7}
+/* NEWSLETTER PAGE */
+.newsletter-page{padding:calc(var(--nav-h) + 3rem) clamp(1.5rem,5vw,4rem) 5rem}
+.newsletter-hero{max-width:640px;margin:0 auto;text-align:center}
+.issues-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;max-width:1100px;margin:4rem auto 0}
+.issue-card{background:var(--white);border:1px solid var(--parchment-mid);border-radius:4px;padding:1.75rem;cursor:pointer;transition:all .3s}
+.issue-card:hover{box-shadow:0 12px 32px rgba(26,26,24,.07);transform:translateY(-3px)}
+.issue-num{font-size:.75rem;font-weight:500;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem}
+.issue-title{font-family:var(--serif);font-size:1.15rem;margin-bottom:.5rem;line-height:1.3}
+.issue-date{font-size:.8rem;color:var(--ink-faint)}
+/* PRESS PAGE */
+.press-page{padding:calc(var(--nav-h) + 3rem) clamp(1.5rem,5vw,4rem) 5rem;max-width:900px;margin:0 auto}
+.press-grid{display:flex;flex-direction:column;gap:0;margin-top:3rem;border:1px solid var(--parchment-mid);border-radius:4px;overflow:hidden;background:var(--white)}
+.press-item{display:grid;grid-template-columns:120px 1fr auto;gap:1.5rem;padding:1.5rem 2rem;border-bottom:1px solid var(--parchment-mid);align-items:center;transition:background .2s}
+.press-item:last-child{border-bottom:none}
+.press-item:hover{background:var(--parchment)}
+.press-pub{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ink)}
+.press-title{font-size:.95rem;color:var(--ink-muted);line-height:1.4}
+.press-year{font-size:.85rem;color:var(--ink-faint);white-space:nowrap}
+.press-link{font-size:.8rem;color:var(--accent);text-decoration:none;font-weight:500;white-space:nowrap;cursor:pointer}
+.press-link:hover{text-decoration:underline}
+/* CONTACT PAGE */
+.contact-page{padding:calc(var(--nav-h) + 3rem) clamp(1.5rem,5vw,4rem) 5rem}
+.contact-page-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:5rem;max-width:1100px;margin:0 auto;align-items:start}
+.availability-badge{display:inline-flex;align-items:center;gap:.5rem;background:#eaf5ec;color:#2d7a40;font-size:.8rem;font-weight:500;padding:.4rem 1rem;border-radius:100px;margin-top:1.5rem}
+.availability-dot{width:8px;height:8px;border-radius:50%;background:#2d7a40;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:var(--parchment);padding:1rem 1.5rem;border-radius:4px;font-size:.9rem;transform:translateY(120px);opacity:0;transition:all .4s cubic-bezier(.4,0,.2,1);z-index:2000;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.toast.show{transform:translateY(0);opacity:1}
+/* MINI FOOTER */
+.mini-footer{background:var(--ink);color:rgba(247,244,238,.5);padding:2rem clamp(1.5rem,5vw,4rem)}
+.mini-footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+/* RESPONSIVE */
+@media(max-width:860px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .about-grid,.about-page-hero,.contact-page-grid{grid-template-columns:1fr}
+  .about-image-wrap{max-width:360px;margin:0 auto}
+  .post-card.featured{grid-column:auto;display:block}
+  .contact-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .press-item{grid-template-columns:1fr;gap:.5rem}
+  .timeline-item{grid-template-columns:60px 1fr}
+}
+@media(max-width:500px){
+  .footer-inner{grid-template-columns:1fr}
+  .hero-bg-text{font-size:7rem;opacity:.5}
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{text-align:center}
+}
+</style>
 </head>
-
 <body>
 
 <div class="reading-bar" id="readingBar"></div>
 
 <nav id="mainNav">
   <span class="nav-logo" onclick="nav('home')">Maren Sollis</span>
-
   <ul class="nav-links">
     <li><a onclick="nav('about')">About</a></li>
     <li><a onclick="nav('blog')">Writing</a></li>
@@ -28,16 +265,515 @@
     <li><a onclick="nav('newsletter')">Newsletter</a></li>
     <li><a onclick="nav('contact')" class="nav-cta">Get In Touch</a></li>
   </ul>
-
-  <button class="hamburger" id="ham">
-    <span></span><span></span><span></span>
-  </button>
+  <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- PAGE CONTENT (keep everything else the same) -->
+<div class="mobile-menu" id="mob">
+  <a onclick="nav('about');closeMob()">About</a>
+  <a onclick="nav('blog');closeMob()">Writing</a>
+  <a onclick="nav('services');closeMob()">Work With Me</a>
+  <a onclick="nav('newsletter');closeMob()">Newsletter</a>
+  <a onclick="nav('press');closeMob()">Press</a>
+  <a onclick="nav('contact');closeMob()">Get In Touch</a>
+</div>
 
-<!-- JS -->
-<script src="script.js"></script>
+<div class="toast" id="toast"></div>
 
+<!-- ══════════ HOME ══════════ -->
+<div class="page active" id="page-home">
+  <section id="hero">
+    <div class="hero-bg-text">words</div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-tag fade-up">✦ Writer & Creative Thinker</div>
+        <h1 class="hero-title fade-up d1">Ideas that live<br>on the <em>page</em><br>&amp; in the mind.</h1>
+        <p class="hero-sub fade-up d2">I write about culture, creativity, and the quiet observations that shape how we think. Essays, columns, brand storytelling — all with a point of view.</p>
+        <div class="hero-actions fade-up d3">
+          <button class="btn btn-primary" onclick="nav('blog')">Read My Work</button>
+          <button class="btn btn-outline" onclick="nav('contact')">Let's Collaborate</button>
+        </div>
+        <div class="hero-stats fade-up d4">
+          <div><div class="stat-num">140+</div><div class="stat-label">Essays Published</div></div>
+          <div><div class="stat-num">28k</div><div class="stat-label">Monthly Readers</div></div>
+          <div><div class="stat-num">7 yr</div><div class="stat-label">Crafting Words</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--white)">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image-wrap fade-up">
+          <div class="about-image"><div class="about-image-placeholder">M</div></div>
+          <div class="about-image-decor"></div>
+        </div>
+        <div>
+          <span class="section-label fade-up">About Me</span>
+          <h2 class="section-title fade-up d1">A writer obsessed with the texture of everyday life.</h2>
+          <p class="fade-up d2" style="color:var(--ink-muted);line-height:1.8;margin-bottom:1.25rem">Hi, I'm Maren — a writer, essayist, and occasional overthinker based in Edinburgh. For seven years I've been chasing the sentences that feel true.</p>
+          <p class="fade-up d2" style="color:var(--ink-muted);line-height:1.8;margin-bottom:1.5rem">My work has appeared in <em>The Atlantic</em>, <em>Aeon</em>, and <em>Delayed Gratification</em>. I also help brands find language that doesn't sound like it was written by a committee.</p>
+          <blockquote class="about-quote fade-up d3">"Good writing isn't about saying something clever. It's about saying something true in a way people haven't heard before."</blockquote>
+          <div class="about-pills fade-up d4"><span class="pill">Cultural Essays</span><span class="pill">Long-form Journalism</span><span class="pill">Brand Voice</span><span class="pill">Newsletter Writing</span><span class="pill">Ghostwriting</span></div>
+          <div style="margin-top:2rem" class="fade-up d4"><button class="btn btn-outline" onclick="nav('about')">Full Story →</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--parchment)">
+    <div class="container">
+      <div class="blog-header">
+        <div>
+          <span class="section-label fade-up">Latest Writing</span>
+          <h2 class="section-title fade-up d1">Words worth reading.</h2>
+        </div>
+        <button class="btn btn-outline fade-up d1" onclick="nav('blog')">All Posts →</button>
+      </div>
+      <div class="blog-grid" id="homePosts"></div>
+    </div>
+  </section>
+
+  <section style="background:var(--ink);color:var(--parchment)">
+    <div class="container">
+      <span class="section-label fade-up">Work With Me</span>
+      <h2 class="section-title fade-up d1" style="color:var(--parchment)">Let's make something<br>worth reading.</h2>
+      <p class="section-lead fade-up d2" style="color:rgba(247,244,238,.6);margin-bottom:3rem">Whether you need long-form essays, a brand voice that doesn't cringe, or a ghostwritten piece with your name on it.</p>
+      <div class="services-grid-dark" id="homeServices"></div>
+      <div style="text-align:center;margin-top:2.5rem" class="fade-up">
+        <button class="btn btn-outline" style="color:var(--parchment);border-color:rgba(247,244,238,.3)" onclick="nav('services')">See All Services & Pricing →</button>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--parchment-mid)">
+    <div class="container">
+      <span class="section-label fade-up">Kind Words</span>
+      <h2 class="section-title fade-up d1">What others say.</h2>
+      <div class="testimonials-grid" id="homeTesti"></div>
+    </div>
+  </section>
+
+  <section style="background:var(--white)">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <span class="section-label fade-up">Get In Touch</span>
+          <h2 class="section-title fade-up d1">Have a project in mind?</h2>
+          <p class="section-lead fade-up d2" style="margin-bottom:2.5rem">I take on a small number of new clients each quarter. Tell me about your project and let's see if we're a good fit.</p>
+          <div class="contact-info fade-up d2">
+            <div class="contact-item"><div class="contact-icon">✉</div><div><div class="contact-item-label">Email</div><div class="contact-item-val"><a href="mailto:hello@marensollis.com">hello@marensollis.com</a></div></div></div>
+            <div class="contact-item"><div class="contact-icon">◎</div><div><div class="contact-item-label">Based In</div><div class="contact-item-val">Edinburgh, Scotland</div></div></div>
+            <div class="contact-item"><div class="contact-icon">◷</div><div><div class="contact-item-label">Response Time</div><div class="contact-item-val">Usually within 48 hours</div></div></div>
+          </div>
+        </div>
+        <div class="fade-up d1">
+          <form onsubmit="submitForm(event,'hSuc','hBtn')">
+            <div class="form-row">
+              <div class="form-group"><label>Your Name</label><input type="text" placeholder="Jane Smith" required></div>
+              <div class="form-group"><label>Email Address</label><input type="email" placeholder="jane@example.com" required></div>
+            </div>
+            <div class="form-group"><label>What are you looking for?</label>
+              <select><option value="">Select a service…</option><option>Essay Commission</option><option>Newsletter Package</option><option>Brand Voice & Copy</option><option>Ghostwriting Retainer</option><option>Something else</option></select>
+            </div>
+            <div class="form-group"><label>Tell me about your project</label><textarea placeholder="A brief overview, timeline, and budget if you have one…" required></textarea></div>
+            <button type="submit" class="btn btn-primary form-submit" id="hBtn">Send Message</button>
+          </form>
+          <div id="hSuc" style="display:none;padding:1.5rem;background:var(--parchment);border-left:3px solid var(--accent);border-radius:3px;margin-top:1rem">
+            <strong style="font-family:var(--serif)">Message received!</strong>
+            <p style="font-size:.9rem;color:var(--ink-muted);margin-top:.5rem">Thanks for reaching out. I'll be back within 48 hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <span class="footer-logo" onclick="nav('home')">Maren Sollis</span>
+        <p class="footer-desc">Writer, essayist, and brand voice specialist. Based in Edinburgh, working with curious people worldwide.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigate</div>
+        <ul class="footer-links">
+          <li><a onclick="nav('about')">About</a></li>
+          <li><a onclick="nav('blog')">Writing</a></li>
+          <li><a onclick="nav('services')">Work With Me</a></li>
+          <li><a onclick="nav('contact')">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Writing</div>
+        <ul class="footer-links">
+          <li><a onclick="nav('blog','Essay')">Essays</a></li>
+          <li><a onclick="nav('blog','Notebook')">Notebook</a></li>
+          <li><a onclick="nav('newsletter')">Newsletter</a></li>
+          <li><a onclick="nav('press')">Press</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Elsewhere</div>
+        <ul class="footer-links">
+          <li><a onclick="openExt('https://substack.com','Substack')">Substack</a></li>
+          <li><a onclick="openExt('https://twitter.com','Twitter / X')">Twitter / X</a></li>
+          <li><a onclick="openExt('https://linkedin.com','LinkedIn')">LinkedIn</a></li>
+          <li><a onclick="openExt('https://goodreads.com','Goodreads')">Goodreads</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 Maren Sollis. All rights reserved.</span>
+      <div class="social-links">
+        <span class="social-link" onclick="openExt('https://substack.com','Substack')" title="Substack">S</span>
+        <span class="social-link" onclick="openExt('https://twitter.com','Twitter')" title="Twitter">𝕏</span>
+        <span class="social-link" onclick="openExt('https://linkedin.com','LinkedIn')" title="LinkedIn">in</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════ BLOG LIST ══════════ -->
+<div class="page" id="page-blog">
+  <div class="page-header">
+    <div class="container">
+      <span class="back-link" onclick="nav('home')">← Back to Home</span>
+      <span class="section-label">All Writing</span>
+      <h1 class="section-title">Essays, notebooks &amp; observations.</h1>
+      <div class="filter-bar" id="filterBar"></div>
+    </div>
+  </div>
+  <div class="all-posts-grid" id="allPosts"></div>
+  <div class="mini-footer"><div class="mini-footer-inner"><span class="footer-logo" onclick="nav('home')" style="font-size:1.1rem">Maren Sollis</span><span style="font-size:.8rem">© 2025 Maren Sollis</span></div></div>
+</div>
+
+<!-- ══════════ POST READER ══════════ -->
+<div class="page" id="page-post">
+  <div style="background:var(--white);min-height:100vh">
+    <div class="post-reader" id="postContent"></div>
+  </div>
+  <div class="mini-footer"><div class="mini-footer-inner"><span class="footer-logo" onclick="nav('home')" style="font-size:1.1rem">Maren Sollis</span><button class="btn btn-ghost" onclick="nav('blog')" style="font-size:.85rem;padding:.5rem 1.2rem">← All Writing</button></div></div>
+</div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<div class="page" id="page-about">
+  <div class="about-page">
+    <div class="container">
+      <span class="back-link" onclick="nav('home')">← Back to Home</span>
+      <div class="about-page-hero">
+        <div><div class="about-image" style="max-width:420px"><div class="about-image-placeholder" style="font-size:6rem">M</div></div></div>
+        <div>
+          <span class="section-label">About Maren</span>
+          <h1 class="section-title">Seven years of finding the right words.</h1>
+          <p style="color:var(--ink-muted);line-height:1.9;margin-bottom:1.25rem">I'm Maren Sollis — a writer, essayist, and brand voice specialist based in Edinburgh, Scotland. My work sits at the intersection of culture, language, and the quietly profound. I believe the most important ideas are often the ones that feel too small to write about.</p>
+          <p style="color:var(--ink-muted);line-height:1.9;margin-bottom:1.25rem">My essays have appeared in <em>The Atlantic</em>, <em>Aeon</em>, <em>Delayed Gratification</em>, <em>The Believer</em>, and various literary journals I'm still proud to name-drop at dinner. Alongside the writing, I help founders, executives, and brands find language that is genuinely theirs.</p>
+          <p style="color:var(--ink-muted);line-height:1.9;margin-bottom:1.75rem">Before I became a full-time writer, I studied English Literature at the University of St Andrews and spent two restless years as a sub-editor at a regional newspaper — which taught me everything about deadlines and nothing about how to write a lede.</p>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="nav('contact')">Work Together</button>
+            <button class="btn btn-outline" onclick="nav('press')">Press & Publications</button>
+          </div>
+        </div>
+      </div>
+      <div class="timeline">
+        <span class="section-label" style="display:block;text-align:center;margin-bottom:2rem">A Brief History</span>
+        <div class="timeline-item fade-up"><div class="timeline-year">2018</div><div class="timeline-content"><h4>Quit the day job</h4><p>Left sub-editing to write full-time. Terrifying. Worth it. First essay published in <em>Aeon</em> three months later.</p></div></div>
+        <div class="timeline-item fade-up"><div class="timeline-year">2019</div><div class="timeline-content"><h4>Started the newsletter</h4><p><em>The Marginal Note</em> launched with 47 subscribers (mostly my mum's book club). Now 28,000 readers every other Sunday.</p></div></div>
+        <div class="timeline-item fade-up"><div class="timeline-year">2021</div><div class="timeline-content"><h4>First commission from The Atlantic</h4><p>"The Lost Art of Boredom" ran as a cover essay. Still my most-read piece, which says something interesting about the times.</p></div></div>
+        <div class="timeline-item fade-up"><div class="timeline-year">2022</div><div class="timeline-content"><h4>Brand work begins</h4><p>Started taking on voice and copy projects for brands. Discovered that writing for companies and writing essays use completely different muscles.</p></div></div>
+        <div class="timeline-item fade-up"><div class="timeline-year">2024</div><div class="timeline-content"><h4>140th published essay</h4><p>Also: moved to a flat with a proper writing room. A desk by the window. A kettle within reach. Everything I ever wanted.</p></div></div>
+      </div>
+      <div style="text-align:center;margin-top:4rem">
+        <p style="color:var(--ink-muted);margin-bottom:1.5rem">Want to know what I'm reading, thinking, or watching right now?</p>
+        <button class="btn btn-primary" onclick="nav('newsletter')">Subscribe to the Newsletter</button>
+      </div>
+    </div>
+  </div>
+  <div class="mini-footer"><div class="mini-footer-inner"><span class="footer-logo" onclick="nav('home')" style="font-size:1.1rem">Maren Sollis</span><span style="font-size:.8rem">© 2025 Maren Sollis</span></div></div>
+</div>
+
+<!-- ══════════ SERVICES ══════════ -->
+<div class="page" id="page-services">
+  <div class="services-page">
+    <div class="container">
+      <span class="back-link" onclick="nav('home')">← Back to Home</span>
+      <span class="section-label">Work With Me</span>
+      <h1 class="section-title">Services &amp; Pricing</h1>
+      <p class="section-lead">Every project is a collaboration. Here's what that looks like, and what it costs.</p>
+      <div class="services-page-grid" id="servGrid"></div>
+      <div class="faq-section">
+        <span class="section-label" style="display:block;text-align:center;margin-bottom:2rem">Frequently Asked</span>
+        <div id="faqAcc"></div>
+      </div>
+      <div style="text-align:center;margin-top:4rem;padding:3rem;background:var(--parchment);border-radius:4px">
+        <h3 style="font-family:var(--serif);font-size:1.6rem;margin-bottom:.75rem">Not sure what you need?</h3>
+        <p style="color:var(--ink-muted);margin-bottom:1.5rem">Drop me a message and we'll figure it out together. No obligation, no pressure.</p>
+        <button class="btn btn-primary" onclick="nav('contact')">Start the Conversation →</button>
+      </div>
+    </div>
+  </div>
+  <div class="mini-footer"><div class="mini-footer-inner"><span class="footer-logo" onclick="nav('home')" style="font-size:1.1rem">Maren Sollis</span><span style="font-size:.8rem">© 2025 Maren Sollis</span></div></div>
+</div>
+
+<!-- ══════════ NEWSLETTER ══════════ -->
+<div class="page" id="page-newsletter">
+  <div class="newsletter-page">
+    <span class="back-link" onclick="nav('home')">← Back to Home</span>
+    <div class="newsletter-hero">
+      <span class="section-label">The Newsletter</span>
+      <h1 class="section-title" style="font-size:clamp(2rem,5vw,3.5rem)">The Marginal Note</h1>
+      <p style="color:var(--ink-muted);font-size:1.1rem;line-height:1.8;margin:1rem 0 2rem">Every other Sunday: one idea, one recommendation, one thing I noticed that week. No ads, no sponsored content. Just writing. 28,000 readers and counting.</p>
+      <form onsubmit="nlSignup(event)" style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center">
+        <input type="email" id="nlEmail" placeholder="your@email.com" required style="flex:1;min-width:220px;max-width:320px">
+        <button type="submit" class="btn btn-primary" id="nlBtn">Subscribe — it's free</button>
+      </form>
+      <p style="font-size:.8rem;color:var(--ink-faint);margin-top:.75rem">No spam. Unsubscribe anytime.</p>
+    </div>
+    <div class="issues-grid" id="issuesGrid"></div>
+  </div>
+  <div class="mini-footer"><div class="mini-footer-inner"><span class="footer-logo" onclick="nav('home')" style="font-size:1.1rem">Maren Sollis</span><span style="font-size:.8rem">© 2025 Maren Sollis</span></div></div>
+</div>
+
+<!-- ══════════ PRESS ══════════ -->
+<div class="page" id="page-press">
+  <div class="press-page">
+    <span class="back-link" onclick="nav('home')">← Back to Home</span>
+    <span class="section-label">Publications</span>
+    <h1 class="section-title">Press &amp; bylines.</h1>
+    <p class="section-lead" style="margin-bottom:0">Selected work from seven years of writing for publications large and small.</p>
+    <div class="press-grid" id="pressGrid"></div>
+    <div style="text-align:center;margin-top:3rem">
+      <p style="color:var(--ink-muted);font-size:.95rem;margin-bottom:1.25rem">For press enquiries, interview requests, or speaking opportunities:</p>
+      <a href="mailto:press@marensollis.com" class="btn btn-outline">press@marensollis.com</a>
+    </div>
+  </div>
+  <div class="mini-footer"><div class="mini-footer-inner"><span class="footer-logo" onclick="nav('home')" style="font-size:1.1rem">Maren Sollis</span><span style="font-size:.8rem">© 2025 Maren Sollis</span></div></div>
+</div>
+
+<!-- ══════════ CONTACT ══════════ -->
+<div class="page" id="page-contact">
+  <div class="contact-page">
+    <span class="back-link" onclick="nav('home')">← Back to Home</span>
+    <div class="contact-page-grid">
+      <div>
+        <span class="section-label">Get In Touch</span>
+        <h1 class="section-title">Let's talk.</h1>
+        <p style="color:var(--ink-muted);line-height:1.8;margin-bottom:1.5rem">I take on a small number of new clients each quarter. If you have a project, a question, or just want to say hello — my inbox is open.</p>
+        <div class="contact-info">
+          <div class="contact-item"><div class="contact-icon">✉</div><div><div class="contact-item-label">Email</div><div class="contact-item-val"><a href="mailto:hello@marensollis.com">hello@marensollis.com</a></div></div></div>
+          <div class="contact-item"><div class="contact-icon">◎</div><div><div class="contact-item-label">Based In</div><div class="contact-item-val">Edinburgh, Scotland (GMT)</div></div></div>
+          <div class="contact-item"><div class="contact-icon">◷</div><div><div class="contact-item-label">Response Time</div><div class="contact-item-val">Within 48 hours, weekdays</div></div></div>
+          <div class="contact-item"><div class="contact-icon">❖</div><div><div class="contact-item-label">Availability</div><div class="contact-item-val"><div class="availability-badge"><span class="availability-dot"></span>Accepting new clients — Q3 2025</div></div></div></div>
+        </div>
+        <div style="margin-top:2.5rem">
+          <p style="font-size:.85rem;color:var(--ink-faint);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.06em;font-weight:500">Also here</p>
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+            <button class="btn btn-ghost" style="font-size:.85rem;padding:.5rem 1.1rem" onclick="openExt('https://substack.com','Substack')">Substack</button>
+            <button class="btn btn-ghost" style="font-size:.85rem;padding:.5rem 1.1rem" onclick="openExt('https://twitter.com','Twitter / X')">Twitter / X</button>
+            <button class="btn btn-ghost" style="font-size:.85rem;padding:.5rem 1.1rem" onclick="openExt('https://linkedin.com','LinkedIn')">LinkedIn</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <form onsubmit="submitForm(event,'cSuc','cBtn')">
+          <div class="form-row">
+            <div class="form-group"><label>Your Name</label><input type="text" placeholder="Jane Smith" required></div>
+            <div class="form-group"><label>Email Address</label><input type="email" placeholder="jane@example.com" required></div>
+          </div>
+          <div class="form-group"><label>Company / Publication</label><input type="text" placeholder="Optional"></div>
+          <div class="form-group"><label>What are you looking for?</label>
+            <select><option value="">Select a service…</option><option>Essay Commission</option><option>Newsletter Package</option><option>Brand Voice & Copy</option><option>Ghostwriting Retainer</option><option>Press / Interview</option><option>Something else</option></select>
+          </div>
+          <div class="form-group"><label>Budget Range</label>
+            <select><option value="">Prefer not to say</option><option>Under £500</option><option>£500 – £1,500</option><option>£1,500 – £3,000</option><option>£3,000+</option></select>
+          </div>
+          <div class="form-group"><label>Tell me about your project</label><textarea placeholder="A brief overview, timeline, and any relevant context…" required></textarea></div>
+          <button type="submit" class="btn btn-primary form-submit" id="cBtn">Send Message</button>
+        </form>
+        <div id="cSuc" style="display:none;padding:1.5rem;background:var(--parchment);border-left:3px solid var(--accent);border-radius:3px;margin-top:1rem">
+          <strong style="font-family:var(--serif)">Message received!</strong>
+          <p style="font-size:.9rem;color:var(--ink-muted);margin-top:.5rem">Thanks for reaching out. I'll be back in touch within 48 hours.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mini-footer"><div class="mini-footer-inner"><span class="footer-logo" onclick="nav('home')" style="font-size:1.1rem">Maren Sollis</span><span style="font-size:.8rem">© 2025 Maren Sollis</span></div></div>
+</div>
+
+<script>
+/* ─── DATA ─── */
+const POSTS=[
+  {id:1,cat:'Essay',emoji:'🌿',bg:'#e8ddd0',title:'The Lost Art of Doing Nothing Productively',excerpt:"We've medicalised boredom, gamified rest, and optimised leisure until it exhausted us. What if idleness was the point all along?",date:'March 28, 2025',read:'8 min',reads:'14k',body:`<p>It begins, as most modern malaises do, with an app. Somewhere between the meditation timer and the habit tracker, between the "intentional rest" podcast and the sleep-score dashboard, we managed to turn doing nothing into one more thing to optimise.</p><p>I became aware of this during a weekend in February when, unable to decide what to do, I sat very still on my sofa for approximately forty-five minutes. No phone. No podcast. No <em>enriching</em> ambient soundscape selected by an algorithm trained on the sleeping habits of Scandinavians.</p><blockquote>Boredom, properly understood, is not an absence. It is a pressure — the productive discomfort of a mind searching for itself.</blockquote><h2>The invention of idle time</h2><p>Leisure, historically speaking, is new. For most of human history, the idea that you might have hours — whole unmolested hours — in which nothing was required of you would have been absurd. The aristocratic classes had it, of course. But even they filled time with elaborate rituals of nothing: calling cards, country walks, the formal presentation of doing very little in a very structured way.</p><p>What we have now is different. We have leisure democratised and immediately corrupted. The eight-hour working day was fought for so that humans might have time to exist beyond their labour. We responded by monetising existence.</p><h2>What boredom actually does</h2><p>The neuroscientists who study the default mode network — the part of the brain active when we're not focused on a specific task — have produced findings that should alarm anyone who hasn't been bored in six months. This network is responsible for self-referential thinking, future planning, creative insight, moral reasoning. It is, in other words, the part of the brain that makes you distinctly you.</p><p>It activates most fully when we are doing nothing in particular. When we stare out of windows. When we let the mind wander without a destination. When we are, in the old-fashioned sense, bored. We have spent the last decade systematically preventing this from happening.</p><h2>A modest proposal</h2><p>I am not suggesting that you throw your phone into the nearest body of water, though I have entertained the thought. I am suggesting something simpler and, frankly, harder: that you make time, regularly, to do nothing that could be called useful, productive, optimised, or intentional. Sit somewhere. Look at something. Think, or don't. Let the mind drift to wherever it goes when no one is steering it.</p><p>The capacity for genuine idleness is not laziness. It is, I would argue, one of the last forms of resistance available to the chronically over-scheduled. It is also, incidentally, where most of my best ideas have come from.</p>`},
+  {id:2,cat:'Culture',emoji:'🗞',bg:'#d8e8e0',title:'On Rereading Books You Hated in School',excerpt:'The texts we were forced through at sixteen carry different weight at thirty-four. An argument for second chances.',date:'Feb 14, 2025',read:'6 min',reads:'8.2k',body:`<p>I hated <em>The Great Gatsby</em> the first time I read it. I was sixteen, it was June, and the sun was making a sincere effort to come through the classroom windows. Gatsby seemed foolish. Daisy seemed boring. The green light seemed like the sort of thing English teachers liked and nobody else did.</p><p>I reread it at thirty-two, on a train from Edinburgh to London, and I nearly wept at Carraway's closing lines. Something had changed. Not the book.</p><blockquote>"So we beat on, boats against the current, borne back ceaselessly into the past." I finally understood what it cost Fitzgerald to write that sentence.</blockquote><h2>What changes</h2><p>The obvious answer is that we change. We accumulate experience that the books were always already about. Gatsby's longing for a past that can't be recovered is not an idea a sixteen-year-old has much use for — their past is last week. At thirty, it resonates differently.</p><p>But there's something else too. When a book is assigned, it comes pre-loaded with obligation. You are reading it to pass a test, to please an adult, to get through something. The text becomes associated with those pressures in ways that are genuinely hard to separate from the words themselves.</p><h2>The recommendation</h2><p>Pick one book you had to read at school that you remember disliking. Give it fifty pages. If it's still not working, put it down — you've given it a fair hearing. But in my experience, the success rate of this experiment is surprisingly high. The books assigned in secondary schools are not, as a rule, there by accident.</p>`},
+  {id:3,cat:'Craft',emoji:'✍️',bg:'#ddd8e8',title:"First Drafts Are Supposed to Be Bad",excerpt:"Every writer knows this. Almost no writer believes it. Here's how to finally make peace with the mess.",date:'Jan 9, 2025',read:'5 min',reads:'11k',body:`<p>The most repeated piece of writing advice in existence is also the most consistently ignored. Every writer has heard it. Most writers nod along when they hear it. Almost no writer actually believes it at the moment of sitting down to write.</p><blockquote>The problem is not knowing that first drafts should be bad. The problem is feeling, in the body, that this particular bad draft is evidence of a fundamental failure of intelligence or talent.</blockquote><h2>Why we don't believe it</h2><p>The issue is that when we read finished writing — even writing we know has been through many drafts — we experience it as something that must have arrived whole. We can't see the crossed-out lines, the discarded paragraphs, the three-page detour that got deleted. We see only the final shape, and it looks inevitable.</p><p>Our own first drafts, by contrast, look exactly like first drafts. And the gap between those two things can feel damning in a way that doesn't respond well to rational reassurance.</p><h2>A practical suggestion</h2><p>Write the bad version on purpose. Make an explicit decision, before you begin, that what you're about to write will be bad and wrong and probably unsalvageable. Then write it anyway. What you'll often find is that some of it is actually fine, and the rest of it is fixable. The shift is small but real: you are no longer surprised by imperfection, because you ordered it.</p>`},
+  {id:4,cat:'Notebook',emoji:'☕',bg:'#e8e0d0',title:"What Cafés Know That Offices Don't",excerpt:'Ambient noise, strangers, and impermanence — the accidental genius of third spaces.',date:'Dec 2, 2024',read:'4 min',reads:'6.8k',body:`<p>I wrote my first published essay in a café in Edinburgh's New Town. I went there because my flat was too quiet, and home is where all my displacement activities live.</p><blockquote>The café solves a problem that open-plan offices created and libraries never quite managed: it provides company without demands, noise without obligation, presence without performance.</blockquote><h2>The science of "just enough"</h2><p>Research on ambient noise and cognitive performance suggests there is a sweet spot — roughly 70 decibels — at which moderate background noise enhances creative thinking without disrupting it. A busy café sits comfortably in this range. An open-plan office, with its sudden outbursts of conversation and the specific acoustic anxiety of being overheard, often does not.</p><h2>The impermanence factor</h2><p>There's something else: the knowledge that you will leave. The café is not your space to colonise. You are a temporary resident, which concentrates the mind pleasantly. The two-hour window before your parking runs out, or your coffee cools past drinkability, has a clarifying effect that the infinite availability of your home desk does not.</p>`},
+  {id:5,cat:'Essay',emoji:'🌙',bg:'#dde0e8',title:'In Praise of the Unfinished',excerpt:'Abandoned novels, half-filled notebooks, started paintings. Why some of the most interesting creative work never gets done.',date:'Nov 18, 2024',read:'7 min',reads:'5.1k',body:`<p>In a drawer somewhere there is a novel. It is 40,000 words long, which sounds like a lot until you consider that most novels are at least twice that, and that I wrote those 40,000 words six years ago and have not touched them since.</p><blockquote>The unfinished work contains multitudes. It is still capable of becoming anything. Its unfixedness is not a failure but a kind of permanent potential.</blockquote><h2>The freedom of incompletion</h2><p>Finished work is fixed. It has committed to being one thing, which means it has given up being all other things. The moment you type "The End," you have foreclosed on every other version of the story — all the different endings, the unexplored characters, the structural experiments you didn't attempt. The unfinished work contains all of them, still.</p>`},
+  {id:6,cat:'Culture',emoji:'📻',bg:'#e8e4d0',title:'The Quiet Return of Long-Form Audio',excerpt:'Before podcasts optimised themselves to death, there was radio. Something is coming back.',date:'Oct 5, 2024',read:'6 min',reads:'4.3k',body:`<p>My grandmother listened to the radio the way people now listen to podcasts — constantly, devotedly, across the span of a day. I thought about this recently when I found myself, for the first time in years, listening to a proper radio documentary: an hour long, produced with care, built around a subject that didn't need to be "relevant" or "trending" or positioned for algorithmic discovery.</p><blockquote>The best radio has always understood something that podcasting forgot in its gold rush years: that the listener's attention is not something to be captured. It is something to be deserved.</blockquote><h2>What got lost</h2><p>The podcast boom brought with it a set of assumptions that weren't always useful. That content needed to be searchable, that episodes needed to be regular, that hosts needed personal brands, that everything needed a growth strategy. The medium became anxious about its own metrics in a way that radio never had to be.</p>`}
+];
+const SERVICES=[
+  {icon:'✦',name:'Essay Commission',desc:'A single long-form essay written to your brief, researched and crafted with the care it deserves.',price:'£650',unit:'/ essay',features:['Up to 3,000 words','Two rounds of revisions','Research included','Publication-ready copy','Rights negotiable']},
+  {icon:'✉',name:'Newsletter Package',desc:'Four newsletters per month written in your voice. Includes strategy, structure, and editing.',price:'£1,200',unit:'/ month',features:['4 issues per month','Voice matching interview','Subject line options','Unlimited revisions','Monthly strategy call']},
+  {icon:'◈',name:'Brand Voice & Copy',desc:'Voice guide, tone of voice document, and three pieces of copy to demonstrate it in the wild.',price:'£2,400',unit:'/ project',features:['Brand voice audit','Tone of voice guide','3 sample copy pieces','Team workshop (virtual)','30-day support']},
+  {icon:'◉',name:'Ghostwriting Retainer',desc:'Ongoing partnership for founders, executives, and creative directors. Your byline, my keyboard.',price:'From £3,000',unit:'/ month',features:['Bespoke monthly scope','Weekly check-ins','Priority turnaround','All formats covered','Full confidentiality']}
+];
+const TESTI=[
+  {i:'JL',n:'Jamie Liu',r:'Features Editor, Aeon Magazine',t:'"Maren has an uncanny ability to take a vague brief and return something that feels like it was the only way the piece could ever have been written. She\'s the best writer I\'ve worked with in fifteen years of commissioning."'},
+  {i:'SB',n:'Sofia Brennan',r:'Co-founder, Harbour & Co.',t:'"We came to Maren with a voice problem — our copy sounded like every other DTC brand. Six weeks later, we had something genuinely ours. The emails she writes for us have our highest open rates ever."'},
+  {i:'RT',n:'Ronan Tully',r:'Subscriber & Senior Editor',t:'"I\'ve been reading Maren\'s newsletter for two years and it\'s the only one that reliably makes me stop scrolling. There\'s a quality of attention in her work that\'s increasingly rare."'}
+];
+const FAQS=[
+  {q:'How far in advance do you book?',a:'Typically 4–6 weeks for commissions and packages. For retainer work, I usually have a longer waitlist. Get in touch early if you have a deadline in mind.'},
+  {q:'Do you sign NDAs?',a:'Yes, always for ghostwriting projects. For other work I\'m happy to sign an NDA if you prefer, though I rarely publicise client relationships without explicit permission anyway.'},
+  {q:'What does the revision process look like?',a:'All projects include at least two rounds of revisions. I find that the first revision is usually about structure and direction, the second about language and tone. Most projects are in good shape by round two.'},
+  {q:'Do you work with clients outside the UK?',a:'Absolutely — around half my clients are based in the US, EU, or elsewhere. I work entirely remotely and the process doesn\'t change by geography.'},
+  {q:'Can you write about topics outside your usual areas?',a:'Probably, yes. I\'ve written about everything from fintech to fermentation to the history of public parks. If you\'re unsure, reach out and we can discuss.'}
+];
+const ISSUES=[
+  {n:'#42',t:'The Pleasure of Unnecessary Knowledge',d:'March 23, 2025'},
+  {n:'#41',t:"How to Read a Room You've Never Been In",d:'March 9, 2025'},
+  {n:'#40',t:'In Defence of Changing Your Mind',d:'Feb 23, 2025'},
+  {n:'#39',t:'The Particular Silence of Old Houses',d:'Feb 9, 2025'},
+  {n:'#38',t:'Notes on Being a Generalist',d:'Jan 26, 2025'},
+  {n:'#37',t:"What Experts Don't Know They Know",d:'Jan 12, 2025'}
+];
+const PRESS=[
+  {pub:'The Atlantic',title:'The Weaponisation of Wellness',year:'2024'},
+  {pub:'Aeon',title:'Against Optimism: A Defence of Melancholy',year:'2024'},
+  {pub:'Delayed Gratification',title:'The Last Town With No Internet',year:'2023'},
+  {pub:'The Believer',title:'Everything I Know I Learned From a Dog-Eared Paperback',year:'2023'},
+  {pub:'The Atlantic',title:'The Lost Art of Boredom',year:'2021'},
+  {pub:'Aeon',title:"What We Mean When We Say We're Tired",year:'2020'},
+  {pub:'Literary Hub',title:"On Writing About the Place You're From",year:'2019'},
+  {pub:'Rumpus',title:'First Draft of a Life Not Yet Lived',year:'2018'}
+];
+
+/* ─── RENDER ─── */
+function postCardHTML(p,featured=false){
+  return`<div class="post-card${featured?' featured':''}" onclick="nav('post',${p.id})">
+    <div class="post-img" style="background:${p.bg}"><div class="post-img-inner">${p.emoji}</div></div>
+    <div class="post-body">
+      <span class="post-cat">${p.cat}</span>
+      <h3 class="post-title">${p.title}</h3>
+      <p class="post-excerpt">${p.excerpt}</p>
+      <div class="post-meta"><span>${p.date}</span><span>${p.read} read</span><span>${p.reads} reads</span></div>
+      <span class="read-more">Read essay →</span>
+    </div>
+  </div>`;
+}
+
+function initHome(){
+  const hp=document.getElementById('homePosts');
+  if(hp) hp.innerHTML=POSTS.slice(0,4).map((p,i)=>postCardHTML(p,i===0)).join('');
+  const hs=document.getElementById('homeServices');
+  if(hs) hs.innerHTML=SERVICES.map(s=>`<div class="service-card-dark" onclick="nav('services')"><div class="service-icon">${s.icon}</div><div class="service-name-dark">${s.name}</div><p class="service-desc-dark">${s.desc}</p><div class="service-price-dark">${s.price}<span>${s.unit}</span></div><span class="service-cta-dark">Learn more →</span></div>`).join('');
+  const ht=document.getElementById('homeTesti');
+  if(ht) ht.innerHTML=TESTI.map(t=>`<div class="testi-card fade-up"><div class="stars">★★★★★</div><p class="testi-text">${t.t}</p><div class="testi-author"><div class="testi-avatar">${t.i}</div><div><div class="testi-name">${t.n}</div><div class="testi-role">${t.r}</div></div></div></div>`).join('');
+}
+
+function initBlog(filter='All'){
+  const fb=document.getElementById('filterBar');
+  if(fb){const cats=['All',...new Set(POSTS.map(p=>p.cat))];fb.innerHTML=cats.map(c=>`<button class="filter-btn${c==='All'?' active':''}" onclick="filterPosts('${c}',this)">${c}</button>`).join('');}
+  renderBlogGrid(filter);
+}
+
+function renderBlogGrid(filter){
+  const g=document.getElementById('allPosts');
+  if(!g) return;
+  const list=filter==='All'?POSTS:POSTS.filter(p=>p.cat===filter);
+  g.innerHTML=list.map(p=>postCardHTML(p)).join('');
+}
+
+function filterPosts(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBlogGrid(cat);
+}
+
+function initPost(id){
+  const p=POSTS.find(x=>x.id===id);if(!p) return;
+  const idx=POSTS.findIndex(x=>x.id===id);
+  const prev=POSTS[idx-1],next=POSTS[idx+1];
+  document.getElementById('postContent').innerHTML=`
+    <span class="back-link" onclick="nav('blog')">← All Writing</span>
+    <span class="post-reader-cat">${p.cat}</span>
+    <h1 class="post-reader-title">${p.title}</h1>
+    <div class="post-reader-meta"><span>By Maren Sollis</span><span>${p.date}</span><span>${p.read} read</span><span>${p.reads} reads</span></div>
+    <div class="post-reader-hero" style="background:${p.bg}">${p.emoji}</div>
+    <div class="post-reader-body">${p.body}</div>
+    <div class="post-tags"><span class="pill">${p.cat}</span><span class="pill">Maren Sollis</span><span class="pill">Essay</span></div>
+    <div class="post-nav">
+      ${prev?`<div class="post-nav-item"><div class="post-nav-label">← Previous</div><div class="post-nav-title" onclick="nav('post',${prev.id})">${prev.title}</div></div>`:'<div></div>'}
+      ${next?`<div class="post-nav-item next"><div class="post-nav-label">Next →</div><div class="post-nav-title" onclick="nav('post',${next.id})">${next.title}</div></div>`:'<div></div>'}
+    </div>
+    <div style="text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--parchment-mid)">
+      <p style="color:var(--ink-muted);margin-bottom:1.25rem">Want more essays like this?</p>
+      <button class="btn btn-primary" onclick="nav('newsletter')">Subscribe to The Marginal Note</button>
+    </div>`;
+}
+
+function initServices(){
+  const g=document.getElementById('servGrid');
+  if(g) g.innerHTML=SERVICES.map(s=>`<div class="service-page-card fade-up" onclick="nav('contact')"><div class="spcard-icon">${s.icon}</div><h3 class="spcard-name">${s.name}</h3><p style="font-size:.9rem;color:var(--ink-muted);line-height:1.7">${s.desc}</p><div class="spcard-price">${s.price}<span> ${s.unit}</span></div><ul class="spcard-features">${s.features.map(f=>`<li>${f}</li>`).join('')}</ul><button class="btn btn-primary" style="width:100%" onclick="event.stopPropagation();nav('contact')">Enquire →</button></div>`).join('');
+  const a=document.getElementById('faqAcc');
+  if(a) a.innerHTML=FAQS.map((f,i)=>`<div class="faq-item" id="faq${i}"><div class="faq-q" onclick="toggleFaq(${i})"><span>${f.q}</span><span class="faq-icon">+</span></div><div class="faq-a">${f.a}</div></div>`).join('');
+}
+
+function toggleFaq(i){document.getElementById('faq'+i).classList.toggle('open')}
+
+function initNewsletter(){
+  const g=document.getElementById('issuesGrid');
+  if(g) g.innerHTML=ISSUES.map(is=>`<div class="issue-card fade-up" onclick="toast('Opening: '+${JSON.stringify(is.t)})"><div class="issue-num">${is.n}</div><div class="issue-title">${is.t}</div><div class="issue-date">${is.d}</div></div>`).join('');
+}
+
+function initPress(){
+  const g=document.getElementById('pressGrid');
+  if(g) g.innerHTML=PRESS.map(p=>`<div class="press-item"><div class="press-pub">${p.pub}</div><div class="press-title">${p.title}</div><div style="display:flex;align-items:center;gap:1rem;justify-content:flex-end;flex-wrap:wrap"><span class="press-year">${p.year}</span><span class="press-link" onclick="toast('Opening article from ${p.pub}…')">Read →</span></div></div>`).join('');
+}
+
+/* ─── NAVIGATION ─── */
+function nav(page,param){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  let id='page-'+page;
+  if(page==='post') id='page-post';
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+
+  if(page==='blog'){initBlog(param||'All');if(param){setTimeout(()=>{const b=Array.from(document.querySelectorAll('.filter-btn')).find(x=>x.textContent===param);if(b){document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderBlogGrid(param);}},30);}}
+  else if(page==='post') initPost(param);
+  else if(page==='services') initServices();
+  else if(page==='newsletter') initNewsletter();
+  else if(page==='press') initPress();
+
+  setTimeout(()=>{
+    el.querySelectorAll('.fade-up').forEach(x=>{x.classList.remove('visible');obs.observe(x);});
+    if(page==='home') document.querySelectorAll('#hero .fade-up').forEach((x,i)=>setTimeout(()=>x.classList.add('visible'),80+i*110));
+  },20);
+}
+
+function openExt(url,name){toast(`Opening ${name}…`);setTimeout(()=>window.open(url,'_blank'),500)}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2800)}
+function submitForm(e,sid,bid){e.preventDefault();const b=document.getElementById(bid);b.textContent='Sending…';b.disabled=true;setTimeout(()=>{e.target.style.display='none';document.getElementById(sid).style.display='block';toast("Message sent! I'll be in touch soon.")},1300)}
+function nlSignup(e){e.preventDefault();const b=document.getElementById('nlBtn');b.textContent='Subscribing…';b.disabled=true;setTimeout(()=>{b.textContent='✓ You\'re subscribed!';toast('Welcome! First issue goes out Sunday.')},1200)}
+function closeMob(){document.getElementById('ham').classList.remove('open');document.getElementById('mob').classList.remove('open')}
+
+/* ─── SCROLL ─── */
+const navEl=document.getElementById('mainNav');
+const rb=document.getElementById('readingBar');
+window.addEventListener('scroll',()=>{
+  navEl.classList.toggle('scrolled',scrollY>40);
+  const d=document.documentElement;
+  rb.style.width=Math.min((scrollY/(d.scrollHeight-d.clientHeight))*100,100)+'%';
+});
+
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+
+document.getElementById('ham').addEventListener('click',()=>{document.getElementById('ham').classList.toggle('open');document.getElementById('mob').classList.toggle('open')});
+
+/* ─── INIT ─── */
+initHome();
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+document.querySelectorAll('#hero .fade-up').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),80+i*110));
+</script>
 </body>
 </html>
